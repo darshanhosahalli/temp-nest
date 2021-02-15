@@ -1,32 +1,102 @@
 import { BaseEntity, Entity, PrimaryColumn, Column } from 'typeorm';
-import { EmployeeDepartmentEnum } from './interface/Employee';
+import { EmployeeDepartmentEnum, Employee } from './interface/Employee';
 
+/**
+ * Entity class for employee
+ */
 @Entity()
-export class Employee extends BaseEntity {
-  @PrimaryColumn()
-  readonly empId: string;
+export class EmployeeEntity extends BaseEntity implements Employee {
+  /**
+   * @primarykey
+   * Employee id
+   */
+  @PrimaryColumn({
+    type: 'varchar',
+    length: 150,
+    unique: true,
+    update: false,
+  })
+  empId: string;
 
-  @Column()
+  /**
+   * @column
+   * Employee name
+   */
+  @Column({
+    type: 'varchar',
+    length: 150,
+  })
   name: string;
 
-  @Column()
+  /**
+   * @column
+   * Employee Department
+   */
+  @Column({
+    type: 'varchar',
+    length: 150,
+    enum: EmployeeDepartmentEnum,
+  })
   department: EmployeeDepartmentEnum;
 
-  @Column()
+  /**
+   * @column
+   * Employee position
+   */
+  @Column({
+    type: 'varchar',
+    length: 150,
+  })
   position: string;
 
-  @Column()
+  /**
+   * @column
+   * Employee Salary
+   */
+  @Column({
+    type: 'int',
+  })
   salary: number;
 
-  @Column()
+  /**
+   * @column
+   * Employee current project
+   */
+  @Column({
+    type: 'varchar',
+    length: 150,
+    nullable: true,
+  })
   currentProject?: string;
 
-  @Column()
+  /**
+   * @column
+   * Employee Total leaves
+   */
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
   totalLeaves?: number;
 
-  @Column()
+  /**
+   * @column
+   * Employee leaves taken
+   */
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
   leavesTakes?: number;
 
-  @Column()
+  /**
+   * @column
+   * Employee Photo
+   */
+  @Column({
+    type: 'varchar',
+    length: 250,
+    nullable: true,
+  })
   photo?: string;
 }

@@ -1,41 +1,46 @@
-import { Employee, EmployeeDepartmentEnum } from "../interface/employee";
-import { IsNotEmpty, IsString, IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { Employee, EmployeeDepartmentEnum } from '../interface/employee';
+import {
+  IsNotEmpty,
+  IsString,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+} from 'class-validator';
 
 export class CreateEmployeeDto implements Employee {
+  @IsNotEmpty()
+  @IsString()
+  readonly empId: string;
 
-    @IsNotEmpty()
-    @IsString()
-    readonly empId: string;
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
-    @IsNotEmpty()
-    @IsString()
-    name: string;
+  @IsNotEmpty()
+  @IsEnum(EmployeeDepartmentEnum)
+  department: EmployeeDepartmentEnum;
 
-    @IsNotEmpty()
-    @IsEnum(EmployeeDepartmentEnum)
-    department: EmployeeDepartmentEnum;
+  @IsNotEmpty()
+  @IsString()
+  position: string;
 
-    @IsNotEmpty()
-    @IsString()
-    position: string;
+  @IsNotEmpty()
+  @IsNumber()
+  salary: number;
 
-    @IsNotEmpty()
-    @IsNumber()
-    salary: number;
+  @IsOptional()
+  @IsString()
+  currentProject?: string;
 
-    @IsOptional()
-    @IsString()
-    currentProject?: string;
+  @IsOptional()
+  @IsNumber()
+  totalLeaves?: number;
 
-    @IsOptional()
-    @IsNumber()
-    totalLeaves?: number;
+  @IsOptional()
+  @IsNumber()
+  leavesTakes?: number;
 
-    @IsOptional()
-    @IsNumber()
-    leavesTakes?: number;
-
-    @IsOptional()
-    @IsString()
-    photo?: string;
+  @IsOptional()
+  @IsString()
+  photo?: string;
 }

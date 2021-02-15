@@ -1,0 +1,413 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: AMS
+  description: 'specification AMS Application used to manage attendance of the employees'
+  contact:
+    name: darshan
+    email: darshanhosahalli@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+paths:
+  /v1/employees:
+    get:
+      summary: List Employees
+      description: Get a list of all the Employees
+      tags: 
+        - Employee
+      operationId: getEmployeesV1
+      parameters: 
+        - $ref: '#/components/parameters/pageNumber'
+        - $ref: '#/components/parameters/offset'
+      responses:
+        '200':
+          description: List of Employees
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeesPagedList'
+    post:
+      summary: create an Employee By ID
+      description: creates a new **Employee** by its id value.
+      tags: 
+        - Employee
+      operationId: createEmployeeV1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        '201':
+          description: Created an Employee
+          headers:
+            Location:
+              description: Location of the created employee
+              schema:
+                type: string
+                format: uri
+                example: http://example.com/v1/customers/{id}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
+  /v1/employees/{id}:
+    get:
+      summary: Get Employee By ID
+      description: Get a Single **Employee** by its id value.
+      tags: 
+        - Employee
+      operationId: getEmployeeByIdV1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Employee id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Fetches an Employee of {id}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '404':
+          description: not found
+    patch:
+      summary: updates an Employee By ID
+      description: updates an existing **Employee** by its id value.
+      tags: 
+        - Employee
+      operationId: updateEmployeeByIdV1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Employee id
+          schema:
+            type: string
+      responses:
+        '203':
+          description: Updated an Employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '404':
+          description: not found
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
+    delete:
+      summary: deletes an Employee By ID
+      description: deletes an existing **Employee** by its id value.
+      tags: 
+        - Employee
+      operationId: deleteEmployeeByIdV1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Employee id
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted an Employee
+        '404':
+          description: Not found
+  /v1/projects:
+    get:
+      summary: List projects
+      description: Get a list of all the projects
+      tags: 
+        - Projects
+      parameters: 
+        - $ref: '#/components/parameters/pageNumber'
+        - $ref: '#/components/parameters/offset'
+      responses:
+        '200':
+          description: List of Projects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectsPagedList'
+    post:
+      summary: create a new Project
+      description: creates a new **Project** by its id value.
+      tags: 
+        - Projects
+      responses:
+        '201':
+          description: Created a new Project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projects'
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
+  /v1/projects/{id}:
+    get:
+      summary: Get Project By ID
+      description: Get a Single **Project** by its id value.
+      tags: 
+        - Projects
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Project id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Fetches a Project of {id}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projects'
+        '404':
+          description: not found
+    patch:
+      summary: updates a Project By ID
+      description: updates an existing **Project** by its id value.
+      tags: 
+        - Projects
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Project id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated a Project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projects'
+        '404':
+          description: not found
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
+    delete:
+      summary: deletes a Project By ID
+      description: deletes an existing **Project** by its id value.
+      tags: 
+        - Projects
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Project id
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted an Employee
+        '404':
+          description: Not found
+security: 
+  - basicAuth: []
+  - jwtAuthToken: []
+components:
+  securitySchemes:
+    basicAuth:     # <-- arbitrary name for the security scheme
+      type: http
+      scheme: basic
+    jwtAuthToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Employee:
+      type: object
+      properties:
+        empId:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: 'emp101'
+          readOnly: true
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: 'darshan'
+        department:
+          type: string
+          minLength: 2
+          maxLength: 100
+          enum: [accounts, admin, production]
+          example: accounts
+        position:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: associate
+        salary:
+          type: number
+          minimum: 1000
+          maximum: 1500000
+          example: 15000
+        currentProject:
+          type: string
+          example: 'jira'
+        totalLeaves:
+          type: number
+          example: 15
+        leavesTakes:
+          type: number
+          example: 3
+        photo:
+          type: string
+      required:
+        - empId
+        - name
+        - department
+        - position
+        - salary
+    EmployeesList:
+      type: array
+      minItems: 1
+      maxItems: 100
+      uniqueItems: true
+      items:
+        $ref: '#/components/schemas/Employee'
+    EmployeesPagedList:
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/EmployeesList'
+      allOf:
+        - $ref: '#/components/schemas/PagedResponse'
+    PagedResponse:
+      type: object
+      properties:
+        pageable:
+          type: object
+          properties:
+            sort:
+              type: object
+              properties:
+                sorted:
+                  type: boolean
+                unsorted:
+                  type: boolean
+            offset:
+              type: integer
+              format: int32
+            pageNumber: 
+              type: integer
+              format: int32
+            paged:
+              type: boolean
+            unpaged:
+              type: boolean
+        totalPages:
+          type: integer
+          format: int32
+        last:
+          type: boolean
+        first:
+          type: boolean
+    Projects: 
+      type: object
+      properties:
+        projectId:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: 'emp101'
+          readOnly: true
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: 'siemens'
+        location:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: 'bengaluru'
+        description:
+          type: string
+          minLength: 2
+          maxLength: 255
+          example: 'air cooler project'
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: ['Initial', 'InProgress', 'FinalStages', 'Finished']
+          default: 'Initial'
+        budget: 
+          type: number
+        budgetSpent:
+          type: number
+      required: 
+        - projectId
+        - name
+        - location
+        - description
+        - startDate
+        - endDate
+    ProjectsList:
+      type: array
+      minItems: 1
+      maxItems: 100
+      uniqueItems: true
+      items:
+        $ref: '#/components/schemas/Projects'
+    ProjectsPagedList:
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/ProjectsList'
+      allOf:
+        - $ref: '#/components/schemas/PagedResponse'
+  parameters:
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: Page Number
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+        format: int32
+        default: 1
+    offset:
+      name: offset
+      in: query
+      description: number of results per request
+      required: false
+      schema: 
+        type: integer
+        format: int32
+        default: 25
+    Employeeid:
+      name: id
+      in: path
+      required: true
+      description: Employee id
+      schema:
+        type: string
