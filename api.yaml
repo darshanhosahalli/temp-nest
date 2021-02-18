@@ -10,6 +10,106 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
 paths:
+  /v1/positions:
+    get:
+      summary: List Positions
+      description: Get a list of all the positions
+      tags:
+        - position
+      operationId: getPositionsV1
+      responses:
+        '200':
+          description: List of positions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PositionsList'
+    post:
+      summary: Create a Position
+      description: create a new position
+      tags:
+        - position
+      operationId: createPositionsV1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Position'
+      responses:
+        '201':
+          description: newly created position
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Position'
+  /v1/positions/{id}:
+    delete:
+      summary: Deletes a Position
+      description: Deletes a position specified by id
+      tags:
+        - position
+      operationId: deletePositionsV1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Position id
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted a position
+  /v1/departments:
+    get:
+      summary: List Departments
+      description: Get a list of all the departments
+      tags:
+        - Department
+      operationId: getDepartmentsV1
+      responses:
+        '200':
+          description: List of departments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepartmentList'
+    post:
+      summary: Create a Department
+      description: create a new department
+      tags:
+        - Department
+      operationId: createDepartmentsV1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Department'
+      responses:
+        '201':
+          description: newly created department
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+  /v1/departments/{id}:
+    delete:
+      summary: Delete a department
+      description: Deletes an existing department
+      tags:
+        - Department
+      operationId: deleteDepartmentsV1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: department id
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted a department
   /v1/employees:
     get:
       summary: List Employees
@@ -233,6 +333,89 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    DepartmentList:
+      type: object
+      properties:
+        total: 
+          type: integer
+          format: int32
+        departments:
+          type: array
+          minItems: 1
+          maxItems: 100
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Department'
+    Department:
+      type: object
+      properties:
+        did: 
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: 'did101'
+          readOnly: true
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: 'accounts'
+      required:
+        - did
+        - name
+    PositionsList:
+      type: object
+      properties:
+        total: 
+          type: integer
+          format: int32
+        positions:
+          type: array
+          minItems: 1
+          maxItems: 100
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Position'
+    Position:
+      type: object
+      properties:
+        pid:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: 'pid101'
+          readOnly: true
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: 'associate'
+      required:
+        - pid
+        - name
+    Status:
+      type: object
+      properties:
+        statusId:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: 'stat101'
+          readOnly: true
+        statusName:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: 'in progress'
+        pid:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: 'pid101'
+      required:
+        - statusId
+        - statusName
+        - pid
     Employee:
       type: object
       properties:
